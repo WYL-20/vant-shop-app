@@ -8,7 +8,7 @@ import axios from 'axios'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
-import './mock'
+// import './mock'
 axios.defaults.baseURL = 'http://localhost:9999/api/v1'
 Vue.prototype.$http = axios
 
