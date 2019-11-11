@@ -39,7 +39,10 @@
         <div slot="text">
           <div class="goods_name">{{item.goods_name}}</div>
           <div class="price">￥{{item.price}}</div>
-          <van-button size="small" type="warning">加入购物车</van-button>
+          <van-button
+          @click="addToCart(item.id)"
+          size="small"
+          type="warning">加入购物车</van-button>
         </div>
         </van-grid-item>
       </van-grid>
@@ -74,6 +77,42 @@ export default {
     // })
   },
   methods: {
+    // 加入购物车的方法
+    addToCart (id) {
+      // 先从浏览器中把这个对象取出来，然后转回对象
+      let cart = JSON.parse(localStorage.getItem('cart'))
+      // 如果购物车是空的，就创建一个新的购物车对象
+      if (cart === null) {
+        // 创建购物车对象
+        cart = {
+          ids: [id],
+          info: {
+            [id]: { // [id]：解析id的值，使用 id 的值做为键
+              count: 1,
+              ischk: true
+            }
+          }
+        }
+      } else {
+        // 判断购物车中是否已经有这件商品的ID
+        // 如果没有就加入新商品信息，否则把数量+1
+        if (cart.ids.indexOf(id) === -1) {
+          // 把新的商品的 ID 追回到商品ID 数组中
+          cart.ids.push(id)
+          // 用户商品 ID 做为下标，保存这件商品的数量和勾选状态
+          cart.info[id] = {
+            count: 1,
+            ischk: true
+          }
+        } else {
+          // 商品数量+1
+          cart.info[id].count++
+        }
+      }
+
+      // 先转成字符串，然后再保存到浏览器中
+      localStorage.setItem('cart', JSON.stringify(cart))
+    },
     // 在滚动到底时触发
     loadGoods () {
       // 调用接口取下一页数据
