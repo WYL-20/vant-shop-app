@@ -39,7 +39,10 @@
         <div slot="text">
           <div class="goods_name">{{item.goods_name}}</div>
           <div class="price">￥{{item.price}}</div>
-          <van-button size="small" type="warning">加入购物车</van-button>
+          <van-button
+          @click="addToCart(item.id)"
+          size="small"
+          type="warning">加入购物车</van-button>
         </div>
         </van-grid-item>
       </van-grid>
@@ -74,6 +77,52 @@ export default {
     // })
   },
   methods: {
+    // 加入购物车
+    addToCart (id) {
+      /** ******************* id */
+      // 先从浏览器中取 id 这个数组取出来
+      let ids = localStorage.getItem('id')
+      // 如果还没有就直接定义一个数组并把ID放进去
+      if (ids === null) {
+        ids = [id]
+      } else {
+        // 先转成数组
+        ids = JSON.parse(ids)
+        // 把新商品ID加入
+        ids.push(id)
+        // 去重
+        ids = Array.from(new Set(ids))
+      }
+      // 把 ids 转成字符串，然后再保存回浏览器
+      localStorage.setItem('id', JSON.stringify(ids))
+
+      /** ******************* cart */
+      // 先从浏览器中取 cart 这个数组取出来
+      let cart = localStorage.getItem('cart')
+      // 如果还没有就直接定义一个数组并把ID放进去
+      if (cart === null) {
+        // 先把 cart 设置成一个数组，否则会报错
+        cart = []
+        cart[id] = {
+          ischk: false, // 默认不勾选
+          count: 1 // 默认是1
+        }
+      } else {
+        // 先转成数组
+        cart = JSON.parse(cart)
+        // 判断是否已经有这件商品 ， 如果有就把数量+1，没有就设置为1
+        if (cart[id] === undefined || cart[id] === null) {
+          cart[id] = {
+            ischk: false, // 默认不勾选
+            count: 1 // 默认是1
+          }
+        } else {
+          cart[id].count++
+        }
+      }
+      // 把 ids 转成字符串，然后再保存回浏览器
+      localStorage.setItem('cart', JSON.stringify(cart))
+    },
     // 在滚动到底时触发
     loadGoods () {
       // 调用接口取下一页数据
