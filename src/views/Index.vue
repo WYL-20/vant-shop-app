@@ -10,14 +10,14 @@
       </van-swipe-item>
     </van-swipe>
     <!-- 分类列表 -->
-    <van-grid>
+    <van-grid :border="false">
       <van-grid-item
       v-for="(item, index) in categories"
       :key="index"
       :text="item.cat_name"
        />
     </van-grid>
-
+    <!-- 商品列表 -->
     <van-list
     finished-text="我是有底线的~"
     v-model="loading"
@@ -31,7 +31,7 @@
       3. 在双标签中间写自定义的内容
       4. 把内容使用 slot 指定要放到哪个插槽中
       -->
-      <van-grid :column-num="2">
+      <van-grid :border="false" :column-num="2">
         <van-grid-item v-for="(item, index) in goods" :key="index">
         <!-- 把这个图片放到 icon 这个插槽的位置 （图标所在的位置） -->
         <van-image slot="icon" :src="item.image"></van-image>
@@ -71,10 +71,6 @@ export default {
     this.$http.get('/index_categories').then(res => {
       this.categories = res.data.data
     })
-
-    // this.$http.get(`/index_goods?page=${this.page}&per_page=${this.per_page}`).then(res => {
-    //   this.goods = res.data.data
-    // })
   },
   methods: {
     // 加入购物车的方法
@@ -109,7 +105,6 @@ export default {
           cart.info[id].count++
         }
       }
-
       // 先转成字符串，然后再保存到浏览器中
       localStorage.setItem('cart', JSON.stringify(cart))
     },
@@ -117,19 +112,17 @@ export default {
     loadGoods () {
       // 调用接口取下一页数据
       this.$http.get(`/index_goods?page=${this.page}&per_page=${this.per_page}`).then(res => {
-        // 把返回的数据合并到原来的数据上（合并数组）
-        this.goods.push(...res.data.data)
         // 设置为已经加载完
         this.loading = false
 
-        // 判断是否已经50条了
-        if (this.goods.length >= 50) {
-          // 标记为已经没有更多 数据了，禁止加载事件
+        if (res.data.data.length <= 0 || this.goods.length >= 50) {
           this.finished = true
-        } else {
-          // 先把页码+1
-          this.page++
+          return
         }
+        // 把返回的数据合并到原来的数据上（合并数组）
+        this.goods = this.goods.concat(res.data.data)
+
+        this.page++
       })
     }
   }
