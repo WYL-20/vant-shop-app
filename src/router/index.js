@@ -24,6 +24,14 @@ const routes = [
   {
     path: '/address_add',
     component: () => import('../views/AddressAdd.vue')
+  },
+  {
+    path: '/category',
+    component: () => import('../views/Category.vue')
+  },
+  {
+    path: '/me',
+    component: () => import('../views/Me.vue')
   }
 ]
 
