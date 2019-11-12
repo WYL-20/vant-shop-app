@@ -32,18 +32,21 @@
       4. 把内容使用 slot 指定要放到哪个插槽中
       -->
       <van-grid :border="false" :column-num="2">
-        <van-grid-item v-for="(item, index) in goods" :key="index">
-        <!-- 把这个图片放到 icon 这个插槽的位置 （图标所在的位置） -->
-        <van-image slot="icon" :src="item.image"></van-image>
-        <!-- 使用 text 插槽自定义文字部分的内容 -->
-        <div slot="text">
-          <div class="goods_name">{{item.goods_name}}</div>
-          <div class="price">￥{{item.price}}</div>
-          <van-button
-          @click="addToCart(item.id)"
-          size="small"
-          type="warning">加入购物车</van-button>
-        </div>
+        <van-grid-item
+        :to="'/goods_detail?id='+item.id"
+        v-for="(item, index) in goods"
+        :key="index">
+          <!-- 把这个图片放到 icon 这个插槽的位置 （图标所在的位置） -->
+          <van-image slot="icon" :src="item.image"></van-image>
+          <!-- 使用 text 插槽自定义文字部分的内容 -->
+          <div slot="text">
+            <div class="goods_name">{{item.goods_name}}</div>
+            <div class="price">￥{{item.price}}</div>
+            <van-button
+            @click="addToCart(item.id)"
+            size="small"
+            type="warning">加入购物车</van-button>
+          </div>
         </van-grid-item>
       </van-grid>
     </van-list>
