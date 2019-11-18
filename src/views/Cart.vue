@@ -2,27 +2,30 @@
   <div class="cart">
     <van-nav-bar title="购物车" />
     <div v-if="cart !== null">
-      <!-- 商品列表 -->
-      <van-checkbox
-      :label-disabled="true"
-      v-model="cart.info[item.id].ischk"
-      v-for="(item, index) in goods" :key="index"
-      >
-        <van-card
-          :price="item.price"
-          :title="item.goods_name"
-          :thumb="item.image"
+      <van-swipe-cell v-for="(item, index) in goods" :key="index">
+        <!-- 商品列表 -->
+        <van-checkbox
+        :label-disabled="true"
+        v-model="cart.info[item.id].ischk"
         >
-        <!-- 把这个组件放到 num 插槽的位置  -->
-        <van-stepper slot="num" v-model="cart.info[item.id].count" />
-        <!-- 自定义右下角 -->
-        <van-tag type="warning" slot="footer">
-          小计：
-          ￥{{ (cart.info[item.id].count*item.price).toFixed(2) }}
-        </van-tag>
-        </van-card>
-      </van-checkbox>
-
+          <van-card
+            :price="item.price"
+            :title="item.goods_name"
+            :thumb="item.image"
+          >
+          <!-- 把这个组件放到 num 插槽的位置  -->
+          <van-stepper slot="num" v-model="cart.info[item.id].count" />
+          <!-- 自定义右下角 -->
+          <van-tag type="warning" slot="footer">
+            小计：
+            ￥{{ (cart.info[item.id].count*item.price).toFixed(2) }}
+          </van-tag>
+          </van-card>
+        </van-checkbox>
+        <template slot="right">
+          <van-button class="cart-delete" icon="delete" type="danger" />
+        </template>
+      </van-swipe-cell>
       <van-submit-bar
         :price="totalPrice"
         :button-text="`结算(${cart.ids.length})`"
@@ -114,5 +117,12 @@ export default {
 <style>
   .cart .van-submit-bar {
     bottom: 50px;
+  }
+  .cart .cart-delete {
+    height: 100%;
+    width: 80px;
+  }
+  .cart .cart-delete .van-icon {
+    font-size: 30px;
   }
 </style>
